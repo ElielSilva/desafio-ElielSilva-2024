@@ -14,6 +14,10 @@ class RecintosZoo {
         if (resultado.resultadoErro) {
             return { erro: "Não há recinto viável"}
         }
+        console.log(this.gerarListaDeRecintosDisponiveis(resultado.dados, animal,quantidade))
+        return {
+            recintosViaveis: this.gerarListaDeRecintosDisponiveis(resultado.dados, animal, quantidade)
+        }
 
     }
      
@@ -62,6 +66,22 @@ class RecintosZoo {
             resultadoErro: !resultado.length,
             dados: resultado
         }
+    }
+
+    gerarListaDeRecintosDisponiveis(listaDeRecintos, animal, quantidade) {
+        return listaDeRecintos.map((recinto) => {
+            let espacoExtra = 0
+            const espacoTotal = recintosBase.numero[recinto].tamanhoTotal
+            const espacoOcupado = recintosBase.numero[recinto].animais.reduce((arr, curr) => {
+                if (animal != curr) {
+                    espacoExtra = 1
+                }
+                return arr + especies[curr].tamanho;
+            }, 0)
+            const espacoAnimal = especies[animal].tamanho * quantidade;
+            console.log(espacoAnimal, espacoOcupado, espacoExtra,espacoTotal)
+            return `Recinto ${recinto} (espaço livre: ${espacoTotal - (espacoOcupado + espacoAnimal + espacoExtra)} total: ${espacoTotal})`
+        });
     }
 }
 
