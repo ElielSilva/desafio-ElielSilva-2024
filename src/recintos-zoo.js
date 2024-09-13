@@ -14,7 +14,7 @@ class RecintosZoo {
         if (resultado.resultadoErro) {
             return { erro: "Não há recinto viável"}
         }
-        console.log(this.gerarListaDeRecintosDisponiveis(resultado.dados, animal,quantidade))
+        // console.log(this.gerarListaDeRecintosDisponiveis(resultado.dados, animal,quantidade))
         return {
             recintosViaveis: this.gerarListaDeRecintosDisponiveis(resultado.dados, animal, quantidade)
         }
@@ -45,6 +45,12 @@ class RecintosZoo {
 
     validarExistenciaDeVagas(animal,quantidade) {
         const resultado = especies[animal].biomas.filter((bioma) => {
+            if (animal == "MACACO" && quantidade == 1 && recintosBase.numero[bioma].animais.length == 0) {
+                return false
+            }
+            if (animal == "HIPOPOTAMO" && recintosBase.numero[bioma].bioma != 'savana e rio' && recintosBase.numero[bioma].animais.length != 0) {
+                return false
+            }
             const quantidadeOcupadaEspecieEntrada = especies[animal].tamanho * quantidade
             const result = recintosBase.numero[bioma].animais.reduce((arr, curr) => {
                  if (especies[animal].carnivoros != especies[curr].carnivoros) {
@@ -79,7 +85,7 @@ class RecintosZoo {
                 return arr + especies[curr].tamanho;
             }, 0)
             const espacoAnimal = especies[animal].tamanho * quantidade;
-            console.log(espacoAnimal, espacoOcupado, espacoExtra,espacoTotal)
+            // console.log(espacoAnimal, espacoOcupado, espacoExtra,espacoTotal)
             return `Recinto ${recinto} (espaço livre: ${espacoTotal - (espacoOcupado + espacoAnimal + espacoExtra)} total: ${espacoTotal})`
         });
     }
